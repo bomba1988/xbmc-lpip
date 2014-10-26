@@ -3,10 +3,10 @@
 """
 *
 * LPIP XBMC Addon
-* Version 1.2.1
-* 
+* Version 1.2.2
+*
 * www.letsplayimpot.de
-* 
+*
 * Addon written by cyprus/swift
 *
 *
@@ -28,9 +28,13 @@
 *
 * Version 1.2.1
 * - Feature added: "Fixed Regex for ShowGame"
+*
+* Version 1.2.2
+* - Bug fixed:     Removed python api 1 (https://github.com/bomba1988/xbmc-lpip/issues/1)
+*
 """
 
-import urllib, urllib2, re, xbmc, xbmcplugin, xbmcgui
+import urllib, urllib2, re, xbmcplugin, xbmcgui
 import htmlentitydefs
 
 from xml.dom import minidom
@@ -39,52 +43,52 @@ def ShowStartOverview():
     __AddDirectory( 'Neueste Videos', '', 'SHOW_NEWEST', '' )
     __AddDirectory( 'Meist gesehene Videos', '', 'SHOW_MOST_VIEWED', '' )
     __AddDirectory( 'Längste Videos', '', 'SHOW_LONGEST', '' )
-    
+
     __AddDirectory( 'User', '', 'SHOW_USERS', '' )
     __AddDirectory( 'Spiele', '', 'SHOW_GAMES', '' )
     __AddDirectory( 'Kategorien', '', 'SHOW_CATEGORIES', '' )
     __AddDirectory( 'Tutorials', '', 'SHOW_TUTORIALS', '' )
-    
+
     __AddDirectory( 'Suchen...', '', 'SEARCH_GAME', '' )
 
 def ShowNewest( url ):
     """ Media-RSS Feed Methode
     items = __RequestRSSFeed();
-    
+
     if( len( items ) > 0 ):
         for item in items:
             titleNode = __GetNodeByName( item.childNodes, 'title' )
             title = __GetNodeData( titleNode )
-            
+
             enclosureNode = __GetNodeByName( item.childNodes, 'enclosure' )
             url = __GetNodeAttribute( enclosureNode, 'url' )
-            
+
             __AddVideoLink( title, url, '' )
     """
-    
+
     """ HTML-Methode """
     start = 1
-    
+
     if( not( url is None ) and len( url ) > 0 ):
         start = int( url )
-        
+
     url = 'video.php?action=get_rows&start=' + str( start ) + '&sort=Datum'
-    
+
     __AddDirectory( '→ Nächste Seite...', str( start + 1 ), 'SHOW_NEWEST', '' )
-    
+
     if( not( start == 1 ) ):
         __AddDirectory( '← Vorherige Seite...', str( start - 1 ), 'SHOW_NEWEST', '' )
-    
+
     ShowGame( url, 'SHOW_NEWEST' )
-    
+
     if( not( start == 1 ) ):
         __AddDirectory( '← Vorherige Seite...', str( start - 1 ), 'SHOW_NEWEST', '' )
-    
+
     __AddDirectory( '→ Nächste Seite...', str( start + 1 ), 'SHOW_NEWEST', '' )
 
 def ShowMostViewed( url ):
     start = 1
-    
+
     if( not( url is None ) and len( url ) > 0 ):
         start = int( url )
         
@@ -166,7 +170,7 @@ def ShowGames( url ):
             url = 'http://letsplayimpot.de/gameslist.php' + url
         else:
             url = 'http://letsplayimpot.de/' + url
-    
+
         __GenerateListOverview( url, 'SHOW_GAME', 'SHOW_GAMES' )
     else:
         __AddDirectory( '#', '?action=get_rows&start=0', 'SHOW_GAMES', '' )
@@ -254,7 +258,7 @@ def ShowGame( url, referer = '' ):
         
         nextUrl = url.replace( '&start=' + str( start ), '&start=' + str( start + 1 ) )
         backUrl = url.replace( '&start=' + str( start ), '&start=' + str( start - 1 ) )
-        
+
         if( ( 48 * start ) < count ):
             __AddDirectory( '→ Nächste Seite...', nextUrl, 'SHOW_GAME', '', referer )
         
@@ -262,7 +266,7 @@ def ShowGame( url, referer = '' ):
             __AddDirectory( '← Vorherige Seite...', backUrl, 'SHOW_GAME', '', referer )
         
         __GenerateGameOverview( data, match, referer )
-        
+
         if( start > 1 ):
             __AddDirectory( '← Vorherige Seite...', backUrl, 'SHOW_GAME', '', referer )
         
@@ -342,7 +346,7 @@ def __GenerateGameOverview( data, match, referer ):
         
         orgName = name
         orgUser = user
-        
+
         try:
             name = __Unescape( name )
             user = __Unescape( user )
@@ -474,7 +478,7 @@ def __AddVideoEmbeddedLink( name, url, iconImage, studio = '', date = '', catego
 def __AddVideoLink( name, url, iconImage ):
     liz = xbmcgui.ListItem( name, iconImage = "DefaultVideo.png", thumbnailImage = iconImage )
     liz.setInfo( type = "Video", infoLabels = { "Title": name } )
-    
+
     return xbmcplugin.addDirectoryItem( handle = int( sys.argv[1] ), url = url, listitem = liz )
     
 def GetParameters():
