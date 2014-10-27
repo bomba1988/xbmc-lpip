@@ -3,7 +3,7 @@
 """
 *
 * LPIP XBMC Addon
-* Version 1.2.2
+* Version 1.3.0
 *
 * www.letsplayimpot.de
 *
@@ -32,6 +32,10 @@
 * Version 1.2.2
 * - Bug fixed:     Removed python api 1 (https://github.com/bomba1988/xbmc-lpip/issues/1)
 *
+* Version 1.3.0
+* - Bug fixed:     Letter "H" missing in Userlist (https://github.com/bomba1988/xbmc-lpip/issues/3)    
+* - Feature added: Live List now available in overview (https://github.com/bomba1988/xbmc-lpip/issues/2)
+*
 """
 
 import urllib, urllib2, re, xbmcplugin, xbmcgui
@@ -47,6 +51,7 @@ def ShowStartOverview():
     __AddDirectory( 'User', '', 'SHOW_USERS', '' )
     __AddDirectory( 'Spiele', '', 'SHOW_GAMES', '' )
     __AddDirectory( 'Kategorien', '', 'SHOW_CATEGORIES', '' )
+    __AddDirectory( 'Live', '', 'SHOW_LIVE', '' )
     __AddDirectory( 'Tutorials', '', 'SHOW_TUTORIALS', '' )
 
     __AddDirectory( 'Suchen...', '', 'SEARCH_GAME', '' )
@@ -85,6 +90,16 @@ def ShowNewest( url ):
         __AddDirectory( '← Vorherige Seite...', str( start - 1 ), 'SHOW_NEWEST', '' )
 
     __AddDirectory( '→ Nächste Seite...', str( start + 1 ), 'SHOW_NEWEST', '' )
+
+def ShowLive( url ):
+
+    if( not( url is None ) and len( url ) > 0 ):
+        start = int( url )
+
+    url = 'live.php'
+
+    ShowGame( url, 'SHOW_LIVE' )
+
 
 def ShowMostViewed( url ):
     start = 1
@@ -560,7 +575,8 @@ elif( mode == 'SHOW_GAME' ):
 
 elif( mode == 'PLAY_VIDEO' ):
     PlayVideo( url )
-
+elif( mode == 'SHOW_LIVE' ):
+    ShowLive( url )
 elif( mode == 'SHOW_TUTORIALS' ):
     ShowTutorials()
 
