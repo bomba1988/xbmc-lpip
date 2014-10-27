@@ -140,6 +140,7 @@ def ShowUsers( url ):
         __AddDirectory( 'E', '?action=get_rows&start=5', 'SHOW_USERS', '' )
         __AddDirectory( 'F', '?action=get_rows&start=6', 'SHOW_USERS', '' )
         __AddDirectory( 'G', '?action=get_rows&start=7', 'SHOW_USERS', '' )
+        __AddDirectory( 'H', '?action=get_rows&start=8', 'SHOW_USERS', '' )
         __AddDirectory( 'I', '?action=get_rows&start=9', 'SHOW_USERS', '' )
         __AddDirectory( 'J', '?action=get_rows&start=10', 'SHOW_USERS', '' )
         __AddDirectory( 'K', '?action=get_rows&start=11', 'SHOW_USERS', '' )
